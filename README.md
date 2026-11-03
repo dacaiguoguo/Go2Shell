@@ -2,7 +2,7 @@
 
 ## Introduce
 
-Open an iTerm2, Terminal or Warp window at the current Finder folder by clicking the Finder toolbar icon.
+Open an iTerm2, Terminal, Warp, or Codex window at the current Finder folder by clicking a Finder toolbar icon.
 
 ## macOS 27 build
 
@@ -30,6 +30,12 @@ These checks cover an ordinary Finder folder window. They do not establish suppo
 - Hold down the Command key and drag it to the toolbar.
 - Click the icon, a iTerm2 window pop up with current directory.
 
+To use **Open in Codex**, copy `Open in Codex.app` to `/Applications`, then hold Command and drag it into the Finder toolbar. Clicking it opens the current Finder folder in Codex; if no Finder window is open, it opens the Desktop. It locates the app by its `com.openai.codex` bundle identifier, so it continues to work if the app is named Codex or ChatGPT.
+
+Verified on this Mac on 2026-11-03: the installed utility launched from an ordinary Finder folder without an error, and the user confirmed that Codex opened that folder. Its launcher contains both arm64 and x86_64 architectures and passes strict signature verification. The Desktop fallback and special-character folder names have not been tested for this utility.
+
+The Codex script uses Finder's window target (`brow` / `fvtg`) explicitly. Keep these Finder dictionary codes: compiling a plain `folder of front window` while dictionary lookup is unavailable can resolve `folder` to the wrong AppleScript term and fail at runtime with an alias-conversion error.
+
 If an older copy is already installed, replace it in `/Applications` with the newly built app. The local build does not automatically replace installed copies.
 
 ## Rebuild
@@ -40,7 +46,13 @@ The readable sources are in `scripts/`. On macOS with the command-line developer
 ./build.sh
 ```
 
-The build compiles and verifies all five variants before replacing the repository's app bundles. It preserves their icons and bundle identifier, sets version 1.1, verifies the host's native architecture, and signs and checks each app. Rebuild after changing a source script so its signature remains valid.
+To build only the Codex utility, run:
+
+```bash
+./build.sh 'Open in Codex'
+```
+
+You can also pass one or more existing app names as targets. The build compiles and verifies all selected variants before replacing the repository's app bundles; without arguments it builds all six. It preserves their icons and bundle identifier, sets version 1.1, verifies the host's native architecture, and signs and checks each app. Rebuild after changing a source script so its signature remains valid.
 
 ## Thanks
 
